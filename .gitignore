@@ -1,3 +1,4 @@
 .DS_Store
 *.devhelper
 library/bdPaygateNganLuong/DevHelper/Generated/*
+library/bdPaygateNganLuong/FileSums.php

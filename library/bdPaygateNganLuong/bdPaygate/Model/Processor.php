@@ -5,9 +5,9 @@ class bdPaygateNganLuong_bdPaygate_Model_Processor extends XFCP_bdPaygateNganLuo
 	public function getProcessorNames()
 	{
 		$names = parent::getProcessorNames();
-		
+
 		$names['nganluong'] = 'bdPaygateNganLuong_Processor';
-		
+
 		return $names;
 	}
 }
