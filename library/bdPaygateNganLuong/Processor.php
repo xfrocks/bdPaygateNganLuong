@@ -12,16 +12,24 @@ class bdPaygateNganLuong_Processor extends bdPaygate_Processor_Abstract
 	public static $transactionDetails = array();
 	public static $itemId = '';
 
+	public function isAvailable()
+	{
+		$options = XenForo_Application::getOptions();
+
+		$id = $options->get('bdPaygateNganLuong_id');
+		$pass = $options->get('bdPaygateNganLuong_pass');
+
+		if (empty($id) OR empty($pass))
+		{
+			return false;
+		}
+
+		return parent::isAvailable();
+	}
+
 	public function getSupportedCurrencies()
 	{
-		return array(
-				// bdPaygate_Processor_Abstract::CURRENCY_USD,
-				// bdPaygate_Processor_Abstract::CURRENCY_CAD,
-				// bdPaygate_Processor_Abstract::CURRENCY_AUD,
-				// bdPaygate_Processor_Abstract::CURRENCY_GBP,
-				// bdPaygate_Processor_Abstract::CURRENCY_EUR,
-				self::CURRENCY_VND,
-		);
+		return array(self::CURRENCY_VND);
 	}
 
 	public function isRecurringSupported()
@@ -101,32 +109,7 @@ class bdPaygateNganLuong_Processor extends bdPaygate_Processor_Abstract
 		$callToAction = new XenForo_Phrase('bdpaygatenganluong_call_to_action');
 		$returnUrl = $this->_generateReturnUrl($extraData);
 
-		// calculate amount in VND
-		$currencyRate = 0;
-		switch ($currency)
-		{
-			case bdPaygate_Processor_Abstract::CURRENCY_USD:
-				$currencyRate = 21000;
-				break;
-			case bdPaygate_Processor_Abstract::CURRENCY_CAD:
-				$currencyRate = 20000;
-				break;
-			case bdPaygate_Processor_Abstract::CURRENCY_AUD:
-				$currencyRate = 21500;
-				break;
-			case bdPaygate_Processor_Abstract::CURRENCY_GBP:
-				$currencyRate = 33000;
-				break;
-			case bdPaygate_Processor_Abstract::CURRENCY_EUR:
-				$currencyRate = 27000;
-				break;
-			case self::CURRENCY_VND:
-				$currencyRate = 1;
-				break;
-		}
-		$amountVND = $amount * $currencyRate;
-
-		$redirectUrl = $nlc->buildCheckoutUrl($returnUrl, $email, $itemName, $itemId, $amountVND);
+		$redirectUrl = $nlc->buildCheckoutUrl($returnUrl, $email, $itemName, $itemId, $amount);
 
 		$form = <<<EOF
 <div>
